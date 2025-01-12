@@ -11,7 +11,8 @@ export default {
   	extend: {
   		colors: {
   			background: 'var(--background)',
-  			foreground: 'var(--foreground)'
+  			foreground: 'var(--foreground)',
+				localblue: "#b4c5e4"
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

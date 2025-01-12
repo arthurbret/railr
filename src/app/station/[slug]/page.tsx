@@ -1,108 +1,171 @@
-'use client';
+'use client'
 
-import { LargeTrainCard } from "@/components/layout/LargeTrainCard";
-import { MediumTrainCard } from "@/components/layout/MediumTrainCard";
-import { SmallTrainCard } from "@/components/layout/SmallTrainCard";
-import { formatTime } from "@/lib/utils";
 import { useParams } from "next/navigation";
-import { useState, useEffect, useCallback } from "react";
-
-function transformToTrains(json: any): Train[] {
-  if (!json || !json.departures) {
-    throw new Error("Invalid JSON structure");
-  }
-
-  if (json.disruptions) {
-    console.warn("Des perturbations sont à signaler :", json.disruptions);
-  }
-
-  return json.departures.map((departure: any, index: number): Train => {
-    return {
-      id: index + 1,
-      destination: departure.display_informations.direction || "Unknown",
-      departure: formatTime(departure.stop_date_time.base_departure_date_time) || "Unknown",
-      platform: departure.stop_point?.name || "Unknown",
-      status: (departure.stop_date_time.data_freshness == "base_schedule") ? "On time" : "Delayed",
-      disruption: {
-        cause: departure.stop_date_time.cause || "Unknown",
-        new_departure: formatTime(departure.stop_date_time.departure_date_time) || "Unknown",
-      },
-    };
-  });
-}
+import { useState, useEffect } from "react";
+import { TrainCard } from "@/components/layout/TrainCard";
+import { parseArrivalsRequest, parseDeparturesRequest } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
+import { TrainCardSkeleton } from "@/components/layout/TrainCardSkeleton";
+import { RefreshIcon } from "@/components/ui/refresh";
+import { arrivalsRequest, departuresRequest } from "@/lib/apiRequest";
 
 export default function Home() {
-  const { slug } = useParams();
-  const [trains, setTrains] = useState<Train[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = useState(0);
+  const { slug } = useParams(); // Récupère le paramètre `slug` depuis l'URL
+  const [trainDepartures, setTrainDepartures] = useState<Train[]>([]);
+  const [trainArrivals, setTrainArrivals] = useState<Train[]>([])
+  const [isTitleLoading, setIsTitleLoading] = useState(true);
+  const [isTrainDataLoading, setIsTrainDataLoading] = useState(true);
+  const [stationName, setStationName] = useState<string>("");
 
-  const fetchData = useCallback(async () => {
-    setIsLoading(true);
+  const fetchTitleData = async () => {
+    setIsTitleLoading(true); // Début du chargement
     try {
-      const response = await fetch(
-        `https://api.sncf.com/v1/coverage/sncf/stop_areas/${slug}/departures?offset=${page * 10}&limit=10`,
+      // Requête pour obtenir le nom de la station
+      const stationResponse = await fetch(
+        `https://api.sncf.com/v1/coverage/sncf/stop_areas/${slug}`,
         {
           headers: {
             'Authorization': `${process.env.NEXT_PUBLIC_SNCF_API_KEY}`,
           }
         }
       );
-      const result = await response.json();
-      const transformedTrains = transformToTrains(result);
-      setTrains((prevTrains) => [...prevTrains, ...transformedTrains]);
+      const stationResult = await stationResponse.json();
+      setStationName(stationResult.stop_areas[0].name); // Mise à jour du nom de la station
     } catch (error) {
-      console.error("Erreur lors de la récupération des données :", error);
+      console.error("Erreur lors de la récupération des données 'Nom de gare' :", error);
     } finally {
-      setIsLoading(false);
+      setIsTitleLoading(false); // Fin du chargement
     }
-  }, [slug, page]);
+  };
+
+  const fetchTrainData = async () => {
+    setIsTrainDataLoading(true); // Début du chargement
+    try {
+      // Logique pour obtenir les départs
+      const departuresJson = await departuresRequest(slug);
+      const departuresData = await parseDeparturesRequest(departuresJson);
+      setTrainDepartures(departuresData); // Mise à jour des données
+
+      // Logique pour obtenir les arrivées
+      const arrivalsJson = await arrivalsRequest(slug);
+      const arrivalsData = await parseArrivalsRequest(arrivalsJson);
+      setTrainArrivals(arrivalsData); // Mise à jour des données
+    } catch (error) {
+      console.error("Erreur lors de la récupération des données 'Départs' et 'Arrivées' :", error);
+    } finally {
+      setIsTrainDataLoading(false); // Fin du chargement
+    }
+  }
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 &&
-        !isLoading
-      ) {
-        setPage((prevPage) => prevPage + 1);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [isLoading]);
+    fetchTitleData();
+    fetchTrainData();
+  }, [slug]);
 
   return (
     <div>
-      <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold">Gare de {slug}</h1>
-      </main>
-      <div className="space-y-4 px-4">
-        {trains.length > 0 ? (
-          <>
-            <div className="w-full">
-              <LargeTrainCard train={trains[0]} />
+      {isTitleLoading == true ? (
+        <main className="container mx-auto px-4 py-8 flex justify-center items-center">
+          <Skeleton className="w-1/2 h-8" />
+        </main>
+      ) : (
+        <main className="container mx-auto px-4 py-8 text-center">
+          <h1 className="text-3xl font-bold">{stationName}</h1>
+        </main>
+      )}
+      <Tabs defaultValue="departures" className="space-y-4 px-4">
+        <div className="flex gap-4">
+          <TabsList>
+            <TabsTrigger value="departures">Départs</TabsTrigger>
+            <TabsTrigger value="arrivals">Arrivées</TabsTrigger>
+          </TabsList>
+          <div className="flex items-center gap-2">
+            <p className="text-sm text-gray-500">Mise à jour à {new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</p>
+            <div onClick={fetchTrainData} className="cursor-pointer">
+              <RefreshIcon />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {trains.slice(1, 3).map((train) => (
-                <MediumTrainCard key={train.id} train={train} />
-              ))}
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {trains.slice(3).map((train) => (
-                <SmallTrainCard key={train.id} train={train} />
-              ))}
-            </div>
-          </>
-        ) : (
-          <p>Aucun train disponible.</p>
-        )}
-      </div>
-      {isLoading && <div className="text-center">Chargement...</div>}
+          </div>
+        </div>
+        <TabsContent value="departures" className="space-y-4">
+          {isTrainDataLoading == true ? (
+            <>
+              <div className="w-full">
+                <TrainCardSkeleton key={0} />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {Array.from({ length: 2 }).map((_, i) => (
+                  <TrainCardSkeleton key={i + 1} />
+                ))}
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <TrainCardSkeleton key={i + 3} />
+                ))}
+              </div>
+            </>
+          ) : (
+            trainDepartures.length > 0 ? (
+              <>
+                <div className="w-full">
+                  <TrainCard train={trainDepartures[0]} />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {trainDepartures.slice(1, 3).map((train) => (
+                    <TrainCard key={train.id} train={train} />
+                  ))}
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {trainDepartures.slice(3).map((train) => (
+                    <TrainCard key={train.id} train={train} />
+                  ))}
+                </div>
+              </>
+            ) : (
+              <p>Aucun train disponible.</p>
+            )
+          )}
+        </TabsContent>
+        <TabsContent value="arrivals" className="space-y-4">
+          {isTrainDataLoading == true ? (
+            <>
+              <div className="w-full">
+                <TrainCardSkeleton key={0} />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {Array.from({ length: 2 }).map((_, i) => (
+                  <TrainCardSkeleton key={i + 1} />
+                ))}
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <TrainCardSkeleton key={i + 3} />
+                ))}
+              </div>
+            </>
+          ) : (
+            trainArrivals.length > 0 ? (
+              <>
+                <div className="w-full">
+                  <TrainCard train={trainArrivals[0]} />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {trainArrivals.slice(1, 3).map((train) => (
+                    <TrainCard key={train.id} train={train} />
+                  ))}
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {trainArrivals.slice(3).map((train) => (
+                    <TrainCard key={train.id} train={train} />
+                  ))}
+                </div>
+              </>
+            ) : (
+              <p>Aucun train disponible.</p>
+            )
+          )}
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

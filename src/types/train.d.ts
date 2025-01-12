@@ -6,11 +6,11 @@ interface TrainBase {
 }
 
 interface OnTimeTrain extends TrainBase {
-  status: "On time"
+  status: "À l'heure"
 }
 
 interface DelayedTrain extends TrainBase {
-  status: "Delayed"
+  status: "En retard"
   disruption: {
     cause: string
     new_departure: string

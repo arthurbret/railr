@@ -25,7 +25,7 @@ interface Station {
   label: string
 }
 
-export function ComboboxDemo() {
+export function Combobox() {
   const router = useRouter()
 
   const [open, setOpen] = React.useState(false)
@@ -57,7 +57,7 @@ export function ComboboxDemo() {
       .map((obj: any) => ({
         id: obj.id,
         name: obj.stop_area.name,
-        label: obj.name
+        label: obj.stop_area.name
       }))
 
       setStations(filteredStations)

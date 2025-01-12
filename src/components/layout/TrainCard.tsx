@@ -1,13 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 
-export function MediumTrainCard({ train }: { train: Train }) {
+export function TrainCard({ train, color }: { train: Train, color?: string }) {
   return (
-    <Card>
+    <Card className="hover:drop-shadow-lg z-1 transition" style={{ backgroundColor: color }}>
       <CardHeader>
         <CardTitle className="text-xl flex justify-between items-center">
           {train.destination}
-          <Badge variant={train.status === "On time" ? "default" : "destructive"}>
+          <Badge variant={train.status === "À l'heure" ? "default" : "destructive"}>
             {train.status}
           </Badge>
         </CardTitle>
@@ -16,7 +16,7 @@ export function MediumTrainCard({ train }: { train: Train }) {
         <div className="flex justify-between">
           <div>
             <p className="text-sm font-semibold">Départ</p>
-            {train.status === "On time" ? (
+            {train.status === "À l'heure" ? (
               <p className="text-2xl font-bold">{train.departure}</p>
             ) : (
               <div>
@@ -26,8 +26,19 @@ export function MediumTrainCard({ train }: { train: Train }) {
             )}
           </div>
           <div>
-            <p className="text-sm font-semibold">Voie</p>
-            <p className="text-2xl font-bold">{train.platform}</p>
+            <p className="text-sm font-semibold">Véhicule</p>
+            {(() => {
+              switch (train.platform) {
+              case "Train grande vitesse":
+                return <p className="text-xl font-bold">🚄 TGV</p>
+              case "TER / Intercités":
+                return <p className="text-xl font-bold">🚈 TER</p>
+              case "Autocar":
+                return <p className="text-xl font-bold">🚌 Autocar</p>
+              default:
+                return <p className="text-xl font-bold">{train.platform}</p>
+              }
+            })()}
           </div>
         </div>
       </CardContent>
