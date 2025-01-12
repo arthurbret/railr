@@ -53,8 +53,8 @@ export function Combobox() {
       const data = await response.json()
       
       const filteredStations = (data.pt_objects || [])  // Ajout du fallback à un tableau vide
-      .filter((obj: any) => obj.embedded_type === 'stop_area')
-      .map((obj: any) => ({
+      .filter((obj: { embedded_type: string }) => obj.embedded_type === 'stop_area')
+      .map((obj: { id: string; stop_area: { name: string } }) => ({
         id: obj.id,
         name: obj.stop_area.name,
         label: obj.stop_area.name

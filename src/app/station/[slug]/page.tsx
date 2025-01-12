@@ -1,7 +1,7 @@
 'use client'
 
 import { useParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { TrainCard } from "@/components/layout/TrainCard";
 import { parseArrivalsRequest, parseDeparturesRequest } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,7 +18,7 @@ export default function Home() {
   const [isTrainDataLoading, setIsTrainDataLoading] = useState(true);
   const [stationName, setStationName] = useState<string>("");
 
-  const fetchTitleData = async () => {
+  const fetchTitleData = useCallback(async () => {
     setIsTitleLoading(true); // Début du chargement
     try {
       // Requête pour obtenir le nom de la station
@@ -37,31 +37,35 @@ export default function Home() {
     } finally {
       setIsTitleLoading(false); // Fin du chargement
     }
-  };
+  }, [slug]);
 
-  const fetchTrainData = async () => {
+  const fetchTrainData = useCallback(async () => {
     setIsTrainDataLoading(true); // Début du chargement
     try {
       // Logique pour obtenir les départs
-      const departuresJson = await departuresRequest(slug);
-      const departuresData = await parseDeparturesRequest(departuresJson);
-      setTrainDepartures(departuresData); // Mise à jour des données
+      if (typeof slug === 'string') {
+        const departuresJson = await departuresRequest(slug);
+        const departuresData = await parseDeparturesRequest(departuresJson);
+        setTrainDepartures(departuresData); // Mise à jour des données
 
-      // Logique pour obtenir les arrivées
-      const arrivalsJson = await arrivalsRequest(slug);
-      const arrivalsData = await parseArrivalsRequest(arrivalsJson);
-      setTrainArrivals(arrivalsData); // Mise à jour des données
+        // Logique pour obtenir les arrivées
+        const arrivalsJson = await arrivalsRequest(slug);
+        const arrivalsData = await parseArrivalsRequest(arrivalsJson);
+        setTrainArrivals(arrivalsData); // Mise à jour des données
+      } else {
+        console.error("Invalid slug:", slug);
+      }
     } catch (error) {
       console.error("Erreur lors de la récupération des données 'Départs' et 'Arrivées' :", error);
     } finally {
       setIsTrainDataLoading(false); // Fin du chargement
     }
-  }
+  }, [slug]);
 
   useEffect(() => {
     fetchTitleData();
     fetchTrainData();
-  }, [slug]);
+  }, [fetchTitleData, fetchTrainData]);
 
   return (
     <div>
