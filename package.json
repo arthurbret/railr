@@ -2,11 +2,13 @@
   "name": "traintracker",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "config": "node --experimental-strip-types scripts/config.ts"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.4",
@@ -16,6 +18,9 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
+    "dotenv": "^16.4.7",
+    "firebase": "^11.1.0",
+    "inquirer": "^12.3.2",
     "lucide": "^0.471.0",
     "lucide-react": "^0.469.0",
     "motion": "^11.17.0",
@@ -23,7 +28,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^2.5.5",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "vaul": "^1.1.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
