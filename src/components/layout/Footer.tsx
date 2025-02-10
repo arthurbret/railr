@@ -27,16 +27,13 @@ function KeyboardAwareWrapper({ children }: { children: React.ReactNode }) {
 
 const Footer: React.FC = () => {
   return (
-    <div>
-      <footer className="flex justify-between border border-neutral-200 items-center max-w-fit fixed bottom-0 inset-x-0 mx-auto transform rounded-lg m-4 z-50 backdrop-blur-[7px] gap-[15px] shadow">
-        <KeyboardAwareWrapper>
-          <div className="flex items-center gap-4 border-0">
-            <Combobox />
-          </div>
-        </KeyboardAwareWrapper>
-      </footer>
-      <div className="h-[90px]"></div>
-    </div>
+    // <div className="flex justify-between border border-neutral-200 items-center h-fit max-w-fit p-4 shadow-lg bg-localblue/50 fixed bottom-0 inset-x-0 mx-auto transform rounded-lg m-4 z-50 backdrop-blur-[7px] gap-[15px] shadow">
+      <KeyboardAwareWrapper>
+        <div className="flex items-center gap-4 border-0 max-w-fit fixed bottom-0 inset-x-0 mx-auto mb-4 shadow-xl">
+          <Combobox />
+        </div>
+      </KeyboardAwareWrapper>
+    // </div>
   );
 };
 
