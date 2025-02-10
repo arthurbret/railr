@@ -29,10 +29,11 @@ export const parseDeparturesRequest = async (apiDepartureResponse: DeparturesApi
       destination: departure.display_informations.direction || "Unknown",
       departure: formatTime(departure.stop_date_time.base_departure_date_time) || "Unknown",
       platform: departure.stop_point?.physical_modes[0].name || "Unknown",
+      vehicle_journey: departure.links.find(link => link.type === "vehicle_journey")?.id || "Unknown",
       status: (departure.stop_date_time.data_freshness == "base_schedule") ? "À l'heure" : "En retard",
       disruption: {
-        cause: "Unknown",
-        new_departure: formatTime(departure.stop_date_time.departure_date_time) || "Unknown",
+      cause: "Unknown",
+      new_departure: formatTime(departure.stop_date_time.departure_date_time) || "Unknown",
       },
     };
   });
@@ -48,12 +49,13 @@ export const parseArrivalsRequest = async (apiArrivalResponse: ArrivalsApiRespon
     return {
       id: index + 1,
       destination: arrival.display_informations.direction || "Unknown",
-      departure: formatTime(arrival.stop_date_time.base_departure_date_time) || "Unknown",
+      departure: formatTime(arrival.stop_date_time.base_arrival_date_time) || "Unknown",
       platform: arrival.stop_point?.physical_modes[0].name || "Unknown",
+      vehicle_journey: arrival.links.find(link => link.type === "vehicle_journey")?.id || "Unknown",
       status: (arrival.stop_date_time.data_freshness == "base_schedule") ? "À l'heure" : "En retard",
       disruption: {
         cause: "Unknown",
-        new_departure: formatTime(arrival.stop_date_time.departure_date_time) || "Unknown",
+        new_departure: formatTime(arrival.stop_date_time.arrival_date_time) || "Unknown",
       },
     };
   });

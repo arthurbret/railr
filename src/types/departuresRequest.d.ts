@@ -96,8 +96,6 @@ interface Coord {
 interface Link {
   type: string;
   id: string;
-  name: string;
-  types: string[];
 }
 
 interface StopPoint {
