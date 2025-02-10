@@ -3,6 +3,7 @@ interface TrainBase {
   destination: string
   departure: string
   platform: string
+  vehicle_journey: string
 }
 
 interface OnTimeTrain extends TrainBase {

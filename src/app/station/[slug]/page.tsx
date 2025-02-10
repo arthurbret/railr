@@ -9,6 +9,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TrainCardSkeleton } from "@/components/layout/TrainCardSkeleton";
 import { RefreshIcon } from "@/components/ui/refresh";
 import { arrivalsRequest, departuresRequest } from "@/lib/apiRequest";
+import { errorHandler, FetchContext, FetchError } from "./errorHandler";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const { slug } = useParams(); // Récupère le paramètre `slug` depuis l'URL
@@ -20,49 +22,40 @@ export default function Home() {
   const numberOfObjects = useRef(10);
 
   const handleScroll = useCallback(async () => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-      numberOfObjects.current += 10;
-      try {
-        // Logique pour obtenir les départs
-        if (typeof slug === "string") {
-          const departuresJson = await departuresRequest(
-            slug,
-            numberOfObjects.current
-          );
-          const departuresData = await parseDeparturesRequest(departuresJson);
-          setTrainDepartures(departuresData); // Mise à jour des données
-
-          // Logique pour obtenir les arrivées
-          const arrivalsJson = await arrivalsRequest(
-            slug,
-            numberOfObjects.current
-          );
-          const arrivalsData = await parseArrivalsRequest(arrivalsJson);
-          setTrainArrivals(arrivalsData); // Mise à jour des données
-        }
-      } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des données 'Départs' et 'Arrivées' :",
-          error
+    numberOfObjects.current += 10;
+    try {
+      // Logique pour obtenir les départs
+      if (typeof slug === "string") {
+        const departuresJson = await departuresRequest(
+          slug,
+          numberOfObjects.current
         );
-      } finally {
-        setIsTrainDataLoading(false); // Fin du chargement
+        const departuresData = await parseDeparturesRequest(departuresJson);
+        setTrainDepartures(departuresData); // Mise à jour des données
+
+        // Logique pour obtenir les arrivées
+        const arrivalsJson = await arrivalsRequest(
+          slug,
+          numberOfObjects.current
+        );
+        const arrivalsData = await parseArrivalsRequest(arrivalsJson);
+        setTrainArrivals(arrivalsData); // Mise à jour des données
       }
+    } catch (error) {
+      console.error(
+        "Erreur lors de la récupération des données 'Départs' et 'Arrivées' :",
+        error
+      );
+    } finally {
+      setIsTrainDataLoading(false); // Fin du chargement
     }
   }, [slug]);
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [handleScroll]);
 
   const fetchTitleData = useCallback(async () => {
     setIsTitleLoading(true); // Début du chargement
     try {
       // Requête pour obtenir le nom de la station
-      const stationResponse = await fetch(
+      const stationResponse: Response = await fetch(
         `https://api.sncf.com/v1/coverage/sncf/stop_areas/${slug}`,
         {
           headers: {
@@ -70,13 +63,17 @@ export default function Home() {
           },
         }
       );
+      if (!stationResponse.ok) {
+        throw new FetchError(
+          "Failed to fetch station title",
+          stationResponse.status,
+          FetchContext.title
+        );
+      }
       const stationResult = await stationResponse.json();
       setStationName(stationResult.stop_areas[0].name); // Mise à jour du nom de la station
-    } catch (error) {
-      console.error(
-        "Erreur lors de la récupération des données 'Nom de gare' :",
-        error
-      );
+    } catch (error: unknown) {
+      errorHandler(error);
     } finally {
       setIsTitleLoading(false); // Fin du chargement
     }
@@ -174,6 +171,15 @@ export default function Home() {
                 {trainDepartures.slice(3).map((train) => (
                   <TrainCard key={train.id} train={train} />
                 ))}
+              </div>
+              <div className="flex justify-center pb-4">
+                <Button
+                  className="w-fit"
+                  onClick={handleScroll}
+                  variant="outline"
+                >
+                  Voir plus
+                </Button>
               </div>
             </>
           ) : (
