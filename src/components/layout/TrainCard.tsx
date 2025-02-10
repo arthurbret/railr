@@ -74,14 +74,14 @@ export function TrainCard({ train, color }: { train: Train; color?: string }) {
           <CardHeader>
             <CardTitle className="text-xl flex justify-between items-center">
               {train.destination}
-              <Badge
+            </CardTitle>
+            <Badge
                 variant={
                   train.status === "À l'heure" ? "default" : "destructive"
                 }
-              >
-                {train.status}
-              </Badge>
-            </CardTitle>
+            >
+              {train.status}
+            </Badge>
           </CardHeader>
           <CardContent>
             <div className="flex justify-between">
