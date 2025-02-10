@@ -87,11 +87,6 @@ export function Combobox() {
             </PopoverTrigger>
             <PopoverContent className="w-[300px] p-0">
                 <Command>
-                    <CommandInput
-                        ref={inputRef}
-                        placeholder="Saisissez le nom d'une gare..."
-                        onValueChange={(search) => searchStations(search)}
-                    />
                     {open && (
                         <CommandList>
                             <CommandEmpty>
@@ -120,6 +115,12 @@ export function Combobox() {
                             </CommandGroup>
                         </CommandList>
                     )}
+
+                    <CommandInput
+                        ref={inputRef}
+                        placeholder="Saisissez le nom d'une gare..."
+                        onValueChange={(search) => searchStations(search)}
+                    />
                 </Command>
             </PopoverContent>
         </Popover>
