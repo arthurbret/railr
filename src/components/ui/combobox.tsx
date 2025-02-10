@@ -27,11 +27,22 @@ interface Station {
 
 export function Combobox() {
   const router = useRouter()
+  const inputRef = React.useRef<HTMLInputElement>(null)
 
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
   const [stations, setStations] = React.useState<Station[]>([])
   const [loading, setLoading] = React.useState(false)
+
+  // Effect to focus the input when Popover opens
+  React.useEffect(() => {
+    if (open) {
+      // Using setTimeout to ensure the Popover is fully opened
+      setTimeout(() => {
+        inputRef.current?.focus()
+      }, 0)
+    }
+  }, [open])
 
   const searchStations = React.useCallback(async (search: string) => {
     if (!search && search.length < 3) {
@@ -52,7 +63,7 @@ export function Combobox() {
       
       const data = await response.json()
       
-      const filteredStations = (data.pt_objects || [])  // Ajout du fallback à un tableau vide
+      const filteredStations = (data.pt_objects || [])
       .filter((obj: { embedded_type: string }) => obj.embedded_type === 'stop_area')
       .map((obj: { id: string; stop_area: { name: string } }) => ({
         id: obj.id,
@@ -71,7 +82,7 @@ export function Combobox() {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
+      <PopoverTrigger asChild className="rounded">
         <Button
           variant="outline"
           role="combobox"
@@ -86,6 +97,7 @@ export function Combobox() {
       <PopoverContent className="w-[300px] p-0">
         <Command>
           <CommandInput 
+            ref={inputRef}
             placeholder="Saisissez le nom d'une gare..." 
             onValueChange={(search) => searchStations(search)}
           />

@@ -21,23 +21,25 @@ export const HeaderMessage = () => {
     <>
       {message && (
         <>
-          <div className="w-full h-auto bg-localblue flex items-center justify-center py-2 fixed top-0 z-50">
-            <p className="text-black text-center">
-              {link ? (
-                <a
-                  href={link}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline"
-                >
-                  {message}
-                </a>
-              ) : (
-                message
-              )}
-            </p>
+          <div className="w-full bg-localblue fixed top-0 z-50 shadow-md">
+            <div className="max-w-6xl mx-auto flex items-center justify-center gap-6 py-3">
+              <p className="text-white font-semibold flex items-center gap-2">
+                {link ? (
+                  <a
+                    href={link}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline"
+                  >
+                    {message}
+                  </a>
+                ) : (
+                  message
+                )}
+              </p>
+            </div>
           </div>
-          <div className="h-[35px]"></div>
+          <div className="h-[48px]"></div>
         </>
       )}
     </>
