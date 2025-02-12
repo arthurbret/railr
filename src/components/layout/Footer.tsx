@@ -1,7 +1,7 @@
 export const Footer = () => {
   return (
     <footer className="sticky bottom-0 mt-auto w-full text-center mb-4">
-      {/* <svg
+      <svg
         className="h-auto w-full"
         width="105"
         height="24"
@@ -26,7 +26,7 @@ export const Footer = () => {
           d="M96.5 0C100.692 0 103.54 2.784 103.54 6.944C103.54 10.208 101.684 12.64 98.836 13.472L104.308 23.264H102.612L97.268 13.824H81.5065V23.264H80.0025V0H96.5ZM81.5065 12.448H96.468C99.86 12.448 102.068 10.208 102.068 6.912C102.068 3.648 99.828 1.408 96.468 1.408H81.5065V12.448Z"
           fill="black"
         />
-      </svg> */}
+      </svg>
     </footer>
   );
 };
