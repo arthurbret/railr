@@ -107,7 +107,7 @@ interface StopPoint {
   physical_modes: PhysicalMode[];
 }
 
-interface StopArea {
+export interface StopArea {
   id: string;
   name: string;
   codes: Code[];
