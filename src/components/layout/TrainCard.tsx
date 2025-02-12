@@ -71,7 +71,7 @@ export function TrainCard({ train, color }: { train: Train; color?: string }) {
           className="flex flex-col hover:drop-shadow-lg z-1 transition h-full text-left justify-between"
           style={{ backgroundColor: color }}
         >
-          <CardHeader>
+          <CardHeader className="gap-x-4">
             <CardTitle className="text-xl flex justify-between items-center">
               {train.destination}
             </CardTitle>

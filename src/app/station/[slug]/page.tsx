@@ -11,6 +11,7 @@ import { RefreshIcon } from "@/components/ui/refresh";
 import { arrivalsRequest, departuresRequest } from "@/lib/apiRequest";
 import { errorHandler, FetchContext, FetchError } from "./errorHandler";
 import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
 
 export default function Home() {
   const { slug } = useParams(); // Récupère le paramètre `slug` depuis l'URL
@@ -31,9 +32,14 @@ export default function Home() {
       localStorage.getItem("favorite-stations") || "[]"
     );
     if (!favorites.includes(stationId)) {
-      favorites.push({name: stationName, id: stationId});
-      setIsFavorite(true);
-      localStorage.setItem("favorite-stations", JSON.stringify(favorites));
+      try {
+        favorites.push({ name: stationName, id: stationId });
+        setIsFavorite(true);
+        localStorage.setItem("favorite-stations", JSON.stringify(favorites));
+        toast.success("Gare ajoutée aux favoris");
+      } catch (error) {
+        toast.error(`Erreur lors de l'ajout de la gare favorite: ${error}`);
+      }
     }
   };
 
@@ -41,11 +47,22 @@ export default function Home() {
     const favorites = JSON.parse(
       localStorage.getItem("favorite-stations") || "[]"
     );
-    const index = favorites.indexOf(stationId);
+    const index = favorites.findIndex(
+      (station: { name: string; id: string }) => station.id === stationId
+    );
     if (index > -1) {
-      favorites.splice(index, 1);
-      setIsFavorite(false);
-      localStorage.setItem("favorite-stations", JSON.stringify(favorites));
+      try {
+        favorites.splice(index, 1);
+        setIsFavorite(false);
+        localStorage.setItem("favorite-stations", JSON.stringify(favorites));
+        toast.success("Gare supprimée des favoris");
+      } catch (error) {
+        toast.error(
+          `Erreur lors de la suppression de la gare favorite: ${error}`
+        );
+      }
+    } else {
+      toast.error("Erreur lors de la suppression de la gare favorite");
     }
   };
 
@@ -153,7 +170,7 @@ export default function Home() {
             {isFavorite ? (
               <svg
                 onClick={() => {
-                  if (typeof slug === 'string') {
+                  if (typeof slug === "string") {
                     removeFavoriteStation(slug);
                   }
                 }}
@@ -175,7 +192,7 @@ export default function Home() {
             ) : (
               <svg
                 onClick={() => {
-                  if (typeof slug === 'string') {
+                  if (typeof slug === "string") {
                     addFavoriteStation(slug);
                   }
                 }}
