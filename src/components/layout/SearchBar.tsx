@@ -28,12 +28,12 @@ function KeyboardAwareWrapper({ children }: { children: React.ReactNode }) {
 const SearchBar: React.FC = () => {
   return (
     <>
-      <div className="flex items-center gap-4 border-0 max-w-fit fixed bottom-0 inset-x-0 mx-auto mb-8 shadow-xl">
+      <div className="flex items-center z-20 gap-4 border-0 max-w-fit fixed bottom-0 inset-x-0 mx-auto mb-8 shadow-xl">
         <KeyboardAwareWrapper>
           <Combobox />
         </KeyboardAwareWrapper>
       </div>
-      <div className="h-[60px]" />
+      {/* <div className="h-[60px]" /> */}
     </>
   );
 };

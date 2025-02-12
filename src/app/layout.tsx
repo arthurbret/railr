@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
-import SearchBar from "@/components/layout/SearchBar";
 import { HeaderMessage } from "@/components/layout/HeaderMessage";
 import { Toaster } from "react-hot-toast";
 import { Footer } from "@/components/layout/Footer";
+import SearchBar from "@/components/layout/SearchBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,12 +31,14 @@ export default function RootLayout({
     <html lang="en">
       <meta name="viewport" content="width=device-width, user-scalable=no" />
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-white text-black`}
       >
         <Toaster />
         <HeaderMessage />
         <Header />
-        {children}
+        <div className="flex-1 relative bg-white rounded-b-3xl z-10">
+          {children}
+        </div>
         <SearchBar />
         <Footer />
       </body>
