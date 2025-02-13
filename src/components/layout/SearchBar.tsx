@@ -33,7 +33,6 @@ const SearchBar: React.FC = () => {
           <Combobox />
         </KeyboardAwareWrapper>
       </div>
-      {/* <div className="h-[60px]" /> */}
     </>
   );
 };

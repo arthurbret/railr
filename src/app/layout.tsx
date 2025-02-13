@@ -36,7 +36,7 @@ export default function RootLayout({
         <Toaster />
         <HeaderMessage />
         <Header />
-        <div className="flex-1 relative bg-white rounded-b-3xl z-10">
+        <div className="flex-1 relative bg-white rounded-b-3xl z-10 shadow-xl">
           {children}
         </div>
         <SearchBar />
