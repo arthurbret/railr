@@ -136,7 +136,7 @@ export default function Home() {
   // };
 
   return (
-    <div className="flex-grow">
+    <div className="grow">
       <div>
         <main>
           <h1 className="text-3xl font-bold text-center pt-8">
