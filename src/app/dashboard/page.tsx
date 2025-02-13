@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { departuresRequest } from "@/lib/apiRequest";
 import { parseDeparturesRequest } from "@/lib/utils";
+import { Info } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -222,6 +223,10 @@ export default function Home() {
             </Card>
           ))}
         </ul>
+        <p className="text-gray-500 text-center mt-4 flex items-center justify-center gap-2 px-10">
+          <Info className="size-auto" />
+          Les informations envoyées par notre fournisseur de données peuvent être différentes de la réalité en gare
+        </p>
       </div>
     </div>
   );
