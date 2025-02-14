@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next'
  
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Traintrackr',
-    short_name: 'Traintrackr',
+    name: 'RAILR',
+    short_name: 'RAILR',
     description: 'Suivez les horaires des prochains trains dans votre gare',
     start_url: '/dashboard',
     display: 'standalone',

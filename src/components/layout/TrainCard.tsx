@@ -66,7 +66,7 @@ export function TrainCard({ train, color }: { train: Train; color?: string }) {
 
   return (
     <Drawer onOpenChange={setIsDrawerOpen}>
-      <DrawerTrigger key={train.id} className="w-full h-full">
+      <DrawerTrigger key={train.id} className="size-full cursor-pointer">
         <Card
           className="flex flex-col hover:drop-shadow-lg z-1 transition h-full text-left justify-between"
           style={{ backgroundColor: color }}
