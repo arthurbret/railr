@@ -7,6 +7,9 @@ import { Toaster } from "react-hot-toast";
 import { Footer } from "@/components/layout/Footer";
 import SearchBar from "@/components/layout/SearchBar";
 import { ThemeProvider } from "next-themes";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
+import { GoogleTagManager } from '@next/third-parties/google';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +37,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-white text-black dark:bg-black dark:text-white`}
       >
+        <SpeedInsights/>
+        <Analytics />
+        <GoogleTagManager gtmId="GTM-T9Q8FJ36" />
         <ThemeProvider attribute="class" defaultTheme="system">
           <Toaster />
           <HeaderMessage />
