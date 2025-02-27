@@ -11,13 +11,6 @@ const Header: React.FC = () => {
         className="flex justify-between items-center p-4 bg-localblue/50 fixed rounded-lg m-4 z-50 backdrop-blur-[7px] gap-[15px] shadow-lg cursor-pointer"
       >
         <Image
-          src="/logo_traintracker.jpg"
-          alt="Logo"
-          width={40}
-          height={40}
-          className="rounded shadow-md border border-white/30"
-        />
-        <Image
           src="/logo-railr.svg"
           alt="Railr logo"
           className="mx-auto size-full dark:filter dark:invert"
