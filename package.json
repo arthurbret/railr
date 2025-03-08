@@ -29,7 +29,7 @@
     "inquirer": "^12.3.2",
     "lucide": "^0.471.0",
     "lucide-react": "^0.469.0",
-    "motion": "^11.17.0",
+    "motion": "^11.18.2",
     "next": "^15.1.7",
     "next-themes": "^0.4.4",
     "react": "^19.0.0",
