@@ -35,4 +35,4 @@ Le cas échéant, ajoutez des captures d'écran pour expliquer votre problème.
  - Version [e.g. 22]
 
 **Informations complémentaires**
-Ajoutez toutes les informations complémentaires necéssaires ici.
+Ajoutez toutes les informations complémentaires nécessaires ici.
