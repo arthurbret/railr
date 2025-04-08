@@ -1,6 +1,6 @@
 ---
 name: Proposition de fonctionnalité
-about: Suggérez une idée de fonctionnalité qui vous serais utile
+about: Suggérez une idée de fonctionnalité qui vous serait utile
 title: ''
 labels: 'feature'
 assignees: ''
