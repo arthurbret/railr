@@ -1,65 +1,134 @@
-# Voici TrainTracker <img src="./logo.png" alt="logo TrainTracker" width="50"/>
+<p align="center">
+  <img src="https://www.railr.fr/_next/image?url=%2Flogo_traintracker.jpg&w=96&q=75" height="70" style="border-radius: 8px; margin-right: 20px;">
+  <img src="https://www.railr.fr/logo-railr.svg" height="70">
+</p>
 
-## Génèse du projet
-J'utilise au quotidien les trains TER pour me rendre à l'école et régulièrement des problèmes (retards, trains supprimés...) sont présents. J'ai donc testé différentes manières pour me tenir au courant de ces perturbations : application L'assistant SNCF, l'application SNCF Connect, applications tierces. Elles fonctionnent pour la plupart mais ne sont pas complètes selon moi, elles ne proposent pas de système de notification par exemple, elles prennent du temps à s'ouvrir et beaucoup de clics sont nécessaires pour accéder à l'information recherchée. J'ai donc voulu créer une alternative rapide et simple, sans bug, facile à utiliser en proposant un accès instantanné aux retards, suppressions, grève sur la gare demandée par l'utilisateur.
+<h1 align="center">
+  RAILR
+</h1>
 
-## Objectifs de ce projet
-**Court terme (quelques semaines) :**
- - [x] Accès au tableau des prochains trains d'une gare
- - [x] [Autocompletion barre de recherche](./#autocompletion-barre-de-recherche)
- - [ ] Amélioration visuelle site web
- - [ ] Page "train" avec toutes les informations sur le train
- - [ ] Affichage complet retards et suppression avec la cause
- 
-**Moyen terme (quelques mois) :**
- - [ ] Compte utilisateur avec les gares préférées
- - [ ] Système communautaire d'alerte perturbation
- - [ ] Notification webapp avec les perturbations détectées
- - [ ] Réclamation de groupe
- 
- **Long terme (rentrée septembre 2024)**
- 
- - [ ] Application mobile iOS/Android avec widgets
- - [ ] Application montre connectée watchOS/wearOS avec fonctionnalité logicielle
+<div align="center">
+  	<a href="https://github.com/arthurbret/railr/blob/main/LICENSE">
+    	<img src="https://img.shields.io/badge/licence-GPL 3.0-red" alt="Licence">
+  	</a>
+    <a href="https://github.com/arthurbret/railr/issues">
+      <img src="https://img.shields.io/github/issues/arthurbret/railr" alt="Open Issues">
+    </a>
+    <a href="https://github.com/arthurbret/railr/pulls">
+      <img src="https://img.shields.io/github/issues-pr/arthurbret/railr" alt="Open Pull Requests">
+    </a>
+    <a href="https://github.com/arthurbret/railr/deployments/Production">
+      <img src="https://img.shields.io/github/deployments/arthurbret/railr/Production?label=production-deployment"
+      alt="Production Deployment State">
+    </a>
+</div>
 
-# Présentation des fonctionnalités
+## 📝 Description
 
-## Accès au tableau des prochains trains d'une gare
-Fonction de base du projet, permettre l'affichage du tableau des prochains trains (comme on retrouve dans toutes les gares) de manière simplifiée pour une lecture rapide. Cette fonctionnalité est liée à la barre de recherche qui permet à l'utilisateur de rechercher le nom de la gare qu'il souhaite Tracker.
+<p><strong>Railr</strong> est une Progressive Web App (PWA) mobile-first dédiée aux trains SNCF. Elle permet de suivre en temps réel les prochains trains dans une gare, d’ajouter des gares favorites et de recevoir des notifications ciblées en cas de retard ou de suppression.
+</p>
 
-## Autocompletion barre de recherche
-Fonctionnalité indispensable pour simplifier grandement la recherche. Au lieu de taper lui même le nom exact de la gare, l'utilisateur voit apparaitre des suggestions qui se rapprochent de ce qu'il a déjà tapé dans la barre de recherche. Cette fonctionnalité manque encore de certains éléments de navigation via les touches du clavier (flèche de bas pour défiler dans les suggestions et touche entrée pour valider) et d'éléments de style pour éviter que les suggestions effacent le tableau des prochains départs. Cette autocompletion génère aussi un bug de duplication des suggestions. Ces éléments vont être patchés rapidement, ils ne sont pas très compliqués à résoudre.
 
-## Amélioration visuelle site web
-N'ayant pas beaucoup d'expérience et d'affinités avec le frontend le site n'est pas très joli, certains bugs visuels sont présents comme avec les suggestions mais aussi l'affichage des retards. Ces bugs seront résolus au compte-goutte car ce n'est pas la priorité du projet.
+## ✨ Fonctionnalités
+ - [x] 🕒 Affichage en temps réel des prochains départs et arrivées dans une gare
+ - [x] 📍 Sélection de gares favorites
+ - [x] 🚈 Page "train" avec toutes les informations sur le train et ses différentes gares d'arrêts
+ - [ ] 🔔 Notifications Web Push
+ - [ ] 🚉 Gares à proximités sur le dashboard
+ - [ ] 👮🏼‍♀️ Signalement communautaire (retard, danger)
 
-## Page "train" avec toutes les informations sur le train
-Une page dédiée qui s'affiche quand l'utilisateur clique sur un des trains affichés dans le tableau des prochains départs. Cette page permettra d'accéder au trajet complet du train, les horaires de passage de ce train chaque gare, et toutes les autres informations disponibles sur l'API SNCF.
+## 🛠️ Technologies utilisées
 
-## Affichage complet retards et suppression avec la cause
-Ajout d'un petit bloc en dessous de chaque départ de train qui indique la raison de la suppression ou du retard.
+<table>
+  <tr>
+    <th>Catégorie</th>
+    <th>Bibliothèques</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>Développement avec Next</td>
+    <td>
+      <ul style="list-style-type: none; padding: 0;">
+        <li><a href="https://nextjs.org/"><img src="https://img.shields.io/badge/next-grey" alt="Next" /></a></li>
+        <li><a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/typescript-blue" alt="TypeScript" /></a></li>
+      </ul>
+    </td>
+    <td>Fondamentaux pour Next et typage statique</td>
+  </tr>
+  <tr>
+    <td>Navigation</td>
+    <td>
+      <ul style="list-style-type: none; padding: 0;">
+        <li><a href="https://nextjs.org/docs/app"><img src="https://img.shields.io/badge/app--router-cyan" alt="App Router" /></a></li>
+      </ul>
+    </td>
+    <td>Gestion des routes avec le app-router de Next</td>
+  </tr>
+  <tr>
+    <td>API et services externes</td>
+    <td>
+      <ul style="list-style-type: none; padding: 0;">
+        <li><a href="https://numerique.sncf.com/startup/api/"><img src="https://img.shields.io/badge/api--sncf-purple" alt="API SNCF" /></a></li>
+        <li><a href="https://firebase.google.com/"><img src="https://img.shields.io/badge/firebase-yellow" alt="Firebase" /></a></li>
+      </ul>
+    </td>
+    <td>Affichage d'alertes et notifications stylisées</td>
+  </tr>
+  <tr>
+    <td>Alertes</td>
+    <td>
+      <ul style="list-style-type: none; padding: 0;">
+        <li><a href="https://react-hot-toast.com/"><img src="https://img.shields.io/badge/react--hot--toast-brown" alt="React Hot Toast" /></a></li>
+      </ul>
+    </td>
+    <td>Affichage d'alertes et notifications stylisées</td>
+  </tr>
+  <tr>
+    <td>Style</td>
+    <td>
+      <ul style="list-style-type: none; padding: 0;">
+        <li><a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/tailwind--css-blue" alt="Tailwind CSS" /></a></li>
+        <li><a href="https://ui.shadcn.com/"><img src="https://img.shields.io/badge/shadcn--ui-black" alt="Shadcn UI" /></a></li>
+      </ul>
+    </td>
+    <td>Outils de styling</td>
+  </tr>
+  <tr>
+    <td>Analytique et monitoring</td>
+    <td>
+      <ul style="list-style-type: none; padding: 0;">
+        <li><a href="https://vercel.com/docs/analytics"><img src="https://img.shields.io/badge/vercel--analytics-green" alt="Vercel Analytics" /></a></li>
+        <li><a href="https://vercel.com/docs/speed-insights"><img src="https://img.shields.io/badge/vercel--speed--analytics-yellow" alt="Vercel Speed Insights" /></a></li>
+      </ul>
+    </td>
+  <td>Suivi de l'utilisation et des performances</td>
+  </tr>
+</table>
 
-## Compte utilisateur avec les gares préférées
-Système de connexion avec compte utilisateur sur lequel l'utilisateur pourra enregistrer ses gares préférées pour y avoir accès encore plus rapidement. Nécessite l'ajout d'une interface de connexion qui sera probablement faite avec Firebase pour simplifier l'implémentation.
+## 🚀 Installation
 
-## Système communautaire d'alerte perturbation
-Élement très novateur et dans l'ère du temps, en étant connecté l'utilisateur pourras signaler des perturbation sur le train dans lequel il se trouve. Si jamais l'API SNCF n'indique pas un retard l'utilisateur pourras le signaler et ce retard sera visible par tous les autres utlisateur. Au delà des retards le but est de pouvoir signaler d'autres éléments qui ne seront jamais donnés par l'API comme par exemple un train bondé, une personne qui a un comportement douteux, un bagage oublié...
+**1. Gestion des variables d'environnement**
 
-## Notification webapp avec les perturbations détectées
-L'objectif de ce point est de pouvoir simplifier encore la vie de l'utilisateur en lui évitant de consulter TrainTracker régulièrement pour vérifier si des perturbations sont présentes sur son train. Au lieu de ça la webapp TrainTracker sera capable d'envoyer une notification à l'utilisateur dès qu'une perturbation sera détectée. 
-❗Cette fonctionnalité sera probablement payante pour supporter les frais de serveur
+Pour configurer les variables d'environnement, nous utilisons un fichier `.env` non suivi, placé à la racine du projet.
 
-## Réclamation de groupe
-Proposition qui fera plaisir à beaucoup d'usagers quotidiens des transports SNCF. Le but est de faire des réclamations à la SNCF en groupe. Pendant des périodes de grèves ou de retards intempestifs un bouton apparaitra et permettra à tous les usagers qui le souhaitent de faire partie de la réclamation de groupe puis cette réclamation sera envoyée en masse auprès du service SNCF concerné.
+Un fichier `.env.example` permet de voir la forme du `.env` final, à vous de le compléter avec vos clés
 
-## Application mobile iOS/Android avec widgets
-Cette fonctionnalité est dans la catégorie "long terme" car je ne suis pas encore assez formé pour la proposer. N'hésitez pas à me contacter si vous souhaitez apporter votre aide.
+**2. Utilisation de l'application**
 
-## Application montre connectée watchOS/wearOS avec fonctionnalité logicielle
-Cette fonctionnalité est dans la catégorie "long terme" car je ne suis pas encore assez formé pour la proposer. N'hésitez pas à me contacter si vous souhaitez apporter votre aide.
+Pour exécuter cette application, vous devez d'abord installer les dépendances via le gestionnaire de paquets npm en exécutant la commande `npm i`.
 
-# Utilisation de TrainTracker
+Vous pouvez ensuite run l'application avec la commande `npm run dev`.
 
-Après toute cette présentation vous vous demandez probablement comment utiliser ce merveilleux service ? C'est très simple, il vous suffit de vous rendre sur ce [site web](https://arthurbret.github.io/Train-tracker/).
+## ☕ Soutien
+Railr est un outil 100% gratuit, l'ensemble des frais d'hébergement et de maintenance sont supportés par le développeur, si vous souhaitez le soutenir, n'hésitez pas à sponsor le projet !
 
-N'hésitez pas à me contacter sur cette adresse mail si vous souhaitez participer au projet, donner votre avis ou des conseils, ils sont tous bienvenus : abret.56@gmail.com.
+## ✉️ Contact
+Si vous avez des questions, des suggestions ou des problèmes, n'hésitez pas à m'écrire :
+- 📧 abret.56@gmail.com
+- [LinkedIn](https://www.linkedin.com/in/arthur-bret/)
+
+<br/><br/>
+
+<p align="center">
+  2025 <a href="https://www.railr.fr">Railr</a>
+</p>
