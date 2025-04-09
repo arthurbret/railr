@@ -17,14 +17,14 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <main className="flex-1">
-        <section className="py-12 md:py-24 lg:py-32 xl:py-40 md:px-12 bg-gradient-to-b from-background to-muted">
+        <section className="py-12 md:py-24 lg:py-32 xl:py-40 md:px-12 bg-gradient-to-b from-background to-muted dark:from-black/90 dark:to-muted/30">
           <div className="container w-full max-w-none px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
                   {isClient ? (
                     <motion.h1
-                      className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none"
+                      className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl leading-none dark:text-white"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
@@ -39,7 +39,7 @@ export default function Home() {
 
                   {isClient ? (
                     <motion.p
-                      className="max-w-[600px] text-muted-foreground md:text-xl"
+                      className="max-w-[600px] text-muted-foreground md:text-xl "
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 0.1 }}
@@ -63,10 +63,7 @@ export default function Home() {
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
                   <Button size="lg" className="gap-1">
-                    Get Started <ChevronRight className="h-4 w-4" />
-                  </Button>
-                  <Button size="lg" variant="outline">
-                    Learn More
+                    Chercher une gare <ChevronRight className="h-4 w-4" />
                   </Button>
                 </motion.div>
               </div>
@@ -77,7 +74,7 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: 0.3 }}
               >
                 <div className="relative h-[350px] w-full max-w-[500px] overflow-hidden rounded-xl border bg-background shadow-xl">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-background p-6">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-background dark:from-black/70 dark:to-black dark:text-black p-6">
                     <div className="space-y-2 rounded-lg bg-background/90 backdrop-blur p-4 shadow-lg">
                       <div className="flex items-center justify-between">
                         <h3 className="font-semibold">Paris Gare de Lyon</h3>
@@ -211,7 +208,9 @@ export default function Home() {
                   >
                     {feature.icon}
                   </div>
-                  <h3 className="text-xl font-bold">{feature.title}</h3>
+                  <h3 className="text-xl font-bold dark:text-black">
+                    {feature.title}
+                  </h3>
                   <p
                     className={`text-center ${
                       feature.comingSoon
@@ -227,7 +226,10 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="how-it-works" className="py-12 md:py-24 lg:py-32 bg-muted">
+        <section
+          id="how-it-works"
+          className="py-12 md:py-24 lg:py-32 bg-muted dark:bg-muted/0"
+        >
           <div className="container px-4 md:px-6 w-full max-w-none">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
@@ -286,13 +288,13 @@ export default function Home() {
               </motion.div>
 
               <motion.div
-                className="relative h-[400px] w-full overflow-hidden rounded-xl border bg-background shadow-xl"
+                className="relative h-[400px] w-full overflow-hidden rounded-xl border bg-background shadow-xl dark:border-border"
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
                 viewport={{ once: true }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-background p-6">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-background dark:from-primary/10 dark:to-background/80 p-6">
                   <div className="space-y-4">
                     <div className="flex items-center space-x-2">
                       <div className="h-3 w-3 rounded-full bg-destructive"></div>
@@ -300,13 +302,13 @@ export default function Home() {
                       <div className="h-3 w-3 rounded-full bg-green-500"></div>
                     </div>
 
-                    <div className="rounded-lg bg-background/90 backdrop-blur p-4 shadow-lg">
+                    <div className="rounded-lg bg-background/90 dark:bg-background/80 backdrop-blur p-4 shadow-lg">
                       <div className="mb-4">
                         <div className="relative">
                           <input
                             type="text"
                             placeholder="Search for a station..."
-                            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+                            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background dark:bg-background/90 dark:text-foreground"
                             defaultValue="Paris"
                           />
                           <div className="absolute right-3 top-2">
@@ -330,21 +332,21 @@ export default function Home() {
                       </div>
 
                       <div className="space-y-2">
-                        <div className="flex items-center justify-between rounded-lg bg-muted p-3 hover:bg-muted/80 cursor-pointer">
-                          <div>Paris Gare de Lyon</div>
-                          <Heart className="h-4 w-4 text-muted-foreground" />
+                        <div className="flex items-center justify-between rounded-lg bg-muted dark:bg-muted/90 p-3 hover:bg-muted/80 dark:hover:bg-muted/70 cursor-pointer">
+                          <div className="dark:text-foreground">Paris Gare de Lyon</div>
+                          <Heart className="h-4 w-4 text-muted-foreground dark:text-muted-foreground/80" />
                         </div>
-                        <div className="flex items-center justify-between rounded-lg bg-muted p-3 hover:bg-muted/80 cursor-pointer">
-                          <div>Paris Gare du Nord</div>
-                          <Heart className="h-4 w-4 text-muted-foreground" />
+                        <div className="flex items-center justify-between rounded-lg bg-muted dark:bg-muted/90 p-3 hover:bg-muted/80 dark:hover:bg-muted/70 cursor-pointer">
+                          <div className="dark:text-foreground">Paris Gare du Nord</div>
+                          <Heart className="h-4 w-4 text-muted-foreground dark:text-muted-foreground/80" />
                         </div>
-                        <div className="flex items-center justify-between rounded-lg bg-muted p-3 hover:bg-muted/80 cursor-pointer">
-                          <div>Paris Montparnasse</div>
-                          <Heart className="h-4 w-4 text-muted-foreground" />
+                        <div className="flex items-center justify-between rounded-lg bg-muted dark:bg-muted/90 p-3 hover:bg-muted/80 dark:hover:bg-muted/70 cursor-pointer">
+                          <div className="dark:text-foreground">Paris Montparnasse</div>
+                          <Heart className="h-4 w-4 text-muted-foreground dark:text-muted-foreground/80" />
                         </div>
-                        <div className="flex items-center justify-between rounded-lg bg-muted p-3 hover:bg-muted/80 cursor-pointer">
-                          <div>Paris Saint-Lazare</div>
-                          <Heart className="h-4 w-4 text-muted-foreground" />
+                        <div className="flex items-center justify-between rounded-lg bg-muted dark:bg-muted/90 p-3 hover:bg-muted/80 dark:hover:bg-muted/70 cursor-pointer">
+                          <div className="dark:text-foreground">Paris Saint-Lazare</div>
+                          <Heart className="h-4 w-4 text-muted-foreground dark:text-muted-foreground/80" />
                         </div>
                       </div>
                     </div>
@@ -437,19 +439,21 @@ export default function Home() {
                     "Railr prend en charge toutes les gares SNCF en France, y compris les gares TGV, TER, Intercités et les services locaux.",
                 },
                 {
-                  question: "A quel point les informations en temps réel sont-elles précises ?",
+                  question:
+                    "A quel point les informations en temps réel sont-elles précises ?",
                   answer:
                     "Nos données proviennent directement de la SNCF, garantissant les informations les plus récentes et précises disponibles. Malgré tout, dans de très rares cas, des erreurs peuvent survenir.",
                 },
                 {
-                  question: "Quand est-ce que les notifications seront disponibles ?",
+                  question:
+                    "Quand est-ce que les notifications seront disponibles ?",
                   answer:
                     "Les notifications de perturbations sont une de nos priorités actuellement mais nous n'avons pas encore de date de lancement. Restez à l'écoute pour les mises à jour !",
                 },
                 {
                   question: "Est-ce que je dois créer un compte ?",
                   answer:
-                    "Non ! Nous pensons l'ensemble de nos fonctionnalités pour être accessibles sans compte."
+                    "Non ! Nous pensons l'ensemble de nos fonctionnalités pour être accessibles sans compte.",
                 },
               ].map((item, index) => (
                 <motion.div

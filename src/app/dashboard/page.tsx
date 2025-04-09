@@ -35,66 +35,10 @@ export default function Home() {
       disruption: DisruptionState;
     }[]
   >([]);
-  // const [nearbyStations, setNearbyStations] = useState<
-  //   | {
-  //       name: string;
-  //       id: string;
-  //       nextDepartures: NextDepartures;
-  //       disruption: DisruptionState;
-  //     }[]
-  //   | undefined
-  // >(undefined);
-  // const [isLoadingLocation, setIsLoadingLocation] = useState(false);
-  // const [isGeolocationAllowed, setIsGeolocationAllowed] =
-  //   useState<boolean>(false);
-  // const [position, setPosition] = useState<GeolocationPosition | null>(null);
-
-  // useEffect(() => {
-  //   const checkPermission = async () => {
-  //     const permissionStatus = await navigator.permissions.query({
-  //       name: "geolocation",
-  //     });
-  //     console.log(permissionStatus);
-  //     if (permissionStatus.state == "denied") {
-  //       setIsGeolocationAllowed(false);
-  //     } else if (permissionStatus.state == "granted") {
-  //       setIsGeolocationAllowed(true);
-  //       const response = await fetch(
-  //         process.env.NEXT_PUBLIC_SNCF_BASE_URL +
-  //           // `/coord/${position.coords.latitude};${position.coords.longitude}/stop_areas?distance=1000`,
-  //           `/coord/4.81635;45.76458/stop_areas?distance=1000`,
-  //         {
-  //           headers: {
-  //             Authorization: `${process.env.NEXT_PUBLIC_SNCF_API_KEY}`,
-  //           },
-  //         }
-  //       );
-  //       if (!response.ok) {
-  //         switch (response.status) {
-  //           case 404:
-  //             toast.error("Aucune gare trouvée à proximité");
-  //             break;
-  //           default:
-  //             throw new Error("Failed to fetch nearby stations");
-  //         }
-  //       }
-  //       const data = await response.json();
-  //       setNearbyStations(
-  //         data.stop_areas
-  //           .map((station: StopArea) => ({
-  //             name: station.name,
-  //             id: station.id,
-  //           }))
-  //           .slice(0, 3)
-  //       );
-  //     }
-  //   };
-  //   checkPermission();
-  // }, [isGeolocationAllowed]);
 
   useEffect(() => {
     const favoriteStations: { id: string; name: string }[] = JSON.parse(
-      localStorage.getItem("favorite-stations") || "[]"
+      localStorage.getItem("favorite-stations") ?? "[]"
     );
     const fetchNextTrains = async (
       stations: { id: string; name: string }[]
@@ -122,24 +66,6 @@ export default function Home() {
     fetchNextTrains(favoriteStations);
   }, []);
 
-  // const handleLocationRequest = async () => {
-  //   setIsLoadingLocation(true);
-  //   try {
-  //     let position: GeolocationPosition;
-  //     if (!isGeolocationAllowed) {
-  //       position = await new Promise<GeolocationPosition>((resolve, reject) => {
-  //         navigator.geolocation.getCurrentPosition(resolve, reject);
-  //       });
-  //       setIsGeolocationAllowed(true);
-  //       setPosition(position);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //     setIsLoadingLocation(false);
-  //   }
-  // };
-
   return (
     <div className="flex-grow pb-4 px-4">
       <div>
@@ -149,39 +75,6 @@ export default function Home() {
           </h1>
         </main>
       </div>
-      {/* <div>
-        <main className="container mx-auto text-center px-4 py-8">
-          <h1 className="text-2xl font-bold">Gares à proximité</h1>
-          {nearbyStations === undefined && !isGeolocationAllowed && (
-            <Button
-              onClick={handleLocationRequest}
-              disabled={isLoadingLocation}
-              className="mt-4"
-            >
-              {isLoadingLocation
-                ? "Recherche en cours..."
-                : "Trouver les gares à proximité"}
-            </Button>
-          )}
-        </main>
-        <ul className="flex flex-wrap justify-center gap-4">
-          {nearbyStations?.map((station) => (
-            <Card key={station.id}>
-              <Link href={`station/${station.id}`}>
-                <CardHeader>
-                  <CardTitle className="text-lg">{station.name}</CardTitle>
-                  <CardDescription>
-                    Prochain départ dans 5 minutes
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p>Prochain départ dans 5 minutes</p>
-                </CardContent>
-              </Link>
-            </Card>
-          ))}
-        </ul>
-      </div> */}
       <div className="flex justify-center flex-col">
         <main className="container mx-auto text-center px-4 py-8">
           <h1 className="text-2xl font-bold">Gares favorites</h1>
