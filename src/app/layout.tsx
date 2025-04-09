@@ -40,7 +40,7 @@ export default function RootLayout({
       >
         <SpeedInsights/>
         <Analytics />
-        <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER || ''} />
+        <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER ?? ''} />
         <ThemeProvider attribute="class" defaultTheme="system">
           <Toaster />
           <HeaderMessage />
