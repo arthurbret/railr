@@ -24,7 +24,7 @@ export default function Home() {
                 <div className="space-y-2">
                   {isClient ? (
                     <motion.h1
-                      className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none dark:text-white"
+                      className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl leading-none dark:text-white"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}

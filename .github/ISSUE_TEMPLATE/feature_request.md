@@ -17,4 +17,4 @@ Une description claire et concise de ce que vous voulez qu'il se passe.
 Une description claire et concise de toutes les solutions ou caractéristiques alternatives que vous avez envisagées.
 
 **Informations complémentaires**
-Ajoutez toutes les informations complémentaires necéssaires ici.
+Ajoutez toutes les informations complémentaires nécessaires ici.
