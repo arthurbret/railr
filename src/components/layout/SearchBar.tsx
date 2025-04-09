@@ -1,11 +1,11 @@
 "use client";
 
-import React from "react";
+import { useEffect, useState } from "react";
 import { Combobox } from "../ui/combobox";
 
-import { useEffect, useState } from "react";
-
-function KeyboardAwareWrapper({ children }: { children: React.ReactNode }) {
+function KeyboardAwareWrapper({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   useEffect(() => {
@@ -27,13 +27,11 @@ function KeyboardAwareWrapper({ children }: { children: React.ReactNode }) {
 
 const SearchBar: React.FC = () => {
   return (
-    <>
-      <div className="flex items-center z-20 gap-4 border-0 max-w-fit fixed bottom-0 inset-x-0 mx-auto mb-8 shadow-xl">
-        <KeyboardAwareWrapper>
-          <Combobox />
-        </KeyboardAwareWrapper>
-      </div>
-    </>
+    <div className="flex items-center z-20 gap-4 border-0 max-w-fit fixed bottom-0 inset-x-0 mx-auto mb-8 shadow-xl">
+      <KeyboardAwareWrapper>
+        <Combobox />
+      </KeyboardAwareWrapper>
+    </div>
   );
 };
 
