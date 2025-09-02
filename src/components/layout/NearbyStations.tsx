@@ -47,6 +47,20 @@ export function NearbyStations() {
     }
   };
 
+  const handleDemoMode = () => {
+    setIsLoading(true);
+    setError(null);
+    setLocationRequested(true);
+
+    // Simulate Paris location for demo
+    setTimeout(() => {
+      const parisLocation: UserLocation = { latitude: 48.8566, longitude: 2.3522 };
+      const stations = findNearbyStations(parisLocation, 5, 50);
+      setNearbyStations(stations);
+      setIsLoading(false);
+    }, 1000);
+  };
+
   const formatDistance = (distance: number) => {
     if (distance < 1) {
       return `${Math.round(distance * 1000)}m`;
@@ -75,6 +89,9 @@ export function NearbyStations() {
             <Button onClick={handleGetLocation} disabled={isLoading} className="w-full">
               {isLoading ? "Localisation en cours..." : "Trouver les gares proches"}
             </Button>
+            <Button onClick={handleDemoMode} disabled={isLoading} variant="outline" className="w-full">
+              Voir un exemple (Paris)
+            </Button>
           </div>
         )}
 
@@ -82,9 +99,14 @@ export function NearbyStations() {
           <div className="text-center space-y-4">
             <AlertTriangle className="h-12 w-12 text-destructive mx-auto" />
             <p className="text-sm text-destructive">{error}</p>
-            <Button onClick={handleGetLocation} disabled={isLoading} variant="outline" className="w-full">
-              Réessayer
-            </Button>
+            <div className="flex flex-col gap-2">
+              <Button onClick={handleGetLocation} disabled={isLoading} variant="outline" className="w-full">
+                Réessayer
+              </Button>
+              <Button onClick={handleDemoMode} disabled={isLoading} variant="secondary" className="w-full">
+                Voir un exemple (Paris)
+              </Button>
+            </div>
           </div>
         )}
 
