@@ -12,6 +12,7 @@ import { parseDeparturesRequest } from "@/lib/utils";
 import { Info } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { NearbyStations } from "@/components/layout/NearbyStations";
 
 enum DisruptionState {
   NORMAL = "Pas de perturbation",
@@ -116,6 +117,14 @@ export default function Home() {
             </Card>
           ))}
         </ul>
+
+        {/* Nearby Stations Section */}
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-md mx-auto">
+            <NearbyStations />
+          </div>
+        </div>
+
         <p className="text-gray-500 text-center mt-4 flex items-center justify-center gap-2 px-10">
           <Info className="size-auto" />
           Les informations envoyées par notre fournisseur de données peuvent être différentes de la réalité en gare
