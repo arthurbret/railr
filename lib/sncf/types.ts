@@ -1,12 +1,5 @@
 export type TransportMode =
-  | "tgv"
-  | "intercites"
-  | "ter"
-  | "transilien"
-  | "rer"
-  | "tram"
-  | "car"
-  | "autre"
+  "tgv" | "intercites" | "ter" | "transilien" | "rer" | "tram" | "car" | "autre"
 
 export type TrainStatus = "on-time" | "delayed" | "cancelled"
 
@@ -32,7 +25,7 @@ export interface BoardEntry {
   modeLabel: string
   network: string
   trainNumber: string
-  /** Departure platform ("quai"), when provided by SNCF/Navitia. */
+  /** Platform ("voie") at this station, from the SNCF SIRI Lite feed when assigned. */
   platform?: string
   /** ISO strings, timezone-naive (Europe/Paris local time). */
   baseTime: string
@@ -53,6 +46,7 @@ export interface Board {
 export interface JourneyStop {
   stopAreaId?: string
   name: string
+  platform?: string
   /** "HH:mm" local times. */
   baseArrival?: string
   baseDeparture?: string

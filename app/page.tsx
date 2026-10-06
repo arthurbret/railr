@@ -43,7 +43,8 @@ export default function HomePage() {
             Ne ratez plus jamais votre train.
           </h1>
           <p className="max-w-lg text-base text-pretty text-muted-foreground sm:text-lg">
-            Départs, arrivées, retards et suppressions en temps réel, pour chaque gare de France.
+            Départs, arrivées, retards et suppressions en temps réel, pour
+            chaque gare de France.
           </p>
           <HeroSearch />
         </div>
@@ -68,9 +69,15 @@ export default function HomePage() {
 
       <footer className="border-t border-border/60">
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-3 px-4 py-6 text-xs text-muted-foreground sm:flex-row sm:justify-between">
-          <Image src="/logo-railr.svg" alt="Railr" width={70} height={16} className="h-4 w-auto opacity-70 dark:invert" />
+          <Image
+            src="/logo-railr.svg"
+            alt="Railr"
+            width={70}
+            height={16}
+            className="h-4 w-auto opacity-70 dark:invert"
+          />
           <span>Projet open source, non affilié à la SNCF.</span>
-          <span>Données : API SNCF (Navitia)</span>
+          <span>Données : API SNCF (Navitia) · voies : SNCF Open Data</span>
         </div>
       </footer>
     </main>
