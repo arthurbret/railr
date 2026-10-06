@@ -1,8 +1,21 @@
 "use client"
 
-import { createContext, use, useCallback, useEffect, useMemo, useState } from "react"
+import {
+  createContext,
+  use,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
 import { useRouter } from "next/navigation"
-import { HistoryIcon, MapPinIcon, StarIcon, TrashIcon } from "lucide-react"
+import {
+  HistoryIcon,
+  MapPinIcon,
+  SearchIcon,
+  StarIcon,
+  TrashIcon,
+} from "lucide-react"
 
 import {
   Command,
@@ -14,7 +27,14 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group"
+import { Kbd, KbdGroup } from "@/components/ui/kbd"
 import { Spinner } from "@/components/ui/spinner"
+import { cn } from "@/lib/utils"
 import { useStationSearch } from "@/lib/api"
 import type { SavedStation } from "@/hooks/use-stations-store"
 import { useFavorites, useRecentStations } from "@/hooks/use-stations-store"
@@ -26,6 +46,44 @@ export function useSearch() {
   const ctx = use(SearchContext)
   if (!ctx) throw new Error("useSearch must be used within SearchProvider")
   return ctx
+}
+
+/** Read-only input that opens the search palette (click, focus + typing, ⌘K). */
+export function SearchTrigger({
+  placeholder = "Rechercher une gare",
+  className,
+}: {
+  placeholder?: string
+  className?: string
+}) {
+  const { open } = useSearch()
+
+  return (
+    <InputGroup className={cn("cursor-pointer", className)} onClick={open}>
+      <InputGroupAddon>
+        <SearchIcon />
+      </InputGroupAddon>
+      <InputGroupInput
+        readOnly
+        placeholder={placeholder}
+        aria-label={placeholder}
+        aria-haspopup="dialog"
+        className="cursor-pointer truncate"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " " || e.key.length === 1) {
+            e.preventDefault()
+            open()
+          }
+        }}
+      />
+      <InputGroupAddon align="inline-end" className="hidden sm:flex">
+        <KbdGroup>
+          <Kbd>⌘</Kbd>
+          <Kbd>K</Kbd>
+        </KbdGroup>
+      </InputGroupAddon>
+    </InputGroup>
+  )
 }
 
 export function stationHref(id: string) {
@@ -100,7 +158,9 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
                       <CommandItem
                         key={s.id}
                         value={s.id}
-                        onSelect={() => go({ id: s.id, name: s.name, city: s.city })}
+                        onSelect={() =>
+                          go({ id: s.id, name: s.name, city: s.city })
+                        }
                       >
                         <MapPinIcon />
                         <span className="truncate">{s.name}</span>
@@ -121,7 +181,11 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
                 {favorites.length > 0 && (
                   <CommandGroup heading="Favoris">
                     {favorites.map((s) => (
-                      <CommandItem key={s.id} value={`fav-${s.id}`} onSelect={() => go(s)}>
+                      <CommandItem
+                        key={s.id}
+                        value={`fav-${s.id}`}
+                        onSelect={() => go(s)}
+                      >
                         <StarIcon />
                         <span className="truncate">{s.name}</span>
                       </CommandItem>
@@ -133,14 +197,20 @@ export function SearchProvider({ children }: { children: React.ReactNode }) {
                     {favorites.length > 0 && <CommandSeparator />}
                     <CommandGroup heading="Récents">
                       {recent.map((s) => (
-                        <CommandItem key={s.id} value={`recent-${s.id}`} onSelect={() => go(s)}>
+                        <CommandItem
+                          key={s.id}
+                          value={`recent-${s.id}`}
+                          onSelect={() => go(s)}
+                        >
                           <HistoryIcon />
                           <span className="truncate">{s.name}</span>
                         </CommandItem>
                       ))}
                       <CommandItem value="clear-recent" onSelect={clear}>
                         <TrashIcon />
-                        <span className="text-muted-foreground">Effacer l&apos;historique</span>
+                        <span className="text-muted-foreground">
+                          Effacer l&apos;historique
+                        </span>
                       </CommandItem>
                     </CommandGroup>
                   </>
