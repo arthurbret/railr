@@ -77,6 +77,7 @@ interface RawLink {
 interface RawBoardItem {
   display_informations: RawDisplayInformations
   stop_date_time: RawStopDateTime
+  stop_point?: { platform_code?: string }
   links: RawLink[]
 }
 
@@ -289,6 +290,7 @@ export async function getBoard(
     const { mode, label } = detectMode(info.commercial_mode, info.physical_mode)
     const vehicleJourneyId = item.links.find((l) => l.type === "vehicle_journey")?.id ?? ""
     const trainNumber = info.trip_short_name || info.headsign
+    const platform = item.stop_point?.platform_code?.trim() || undefined
 
     return {
       key: `${vehicleJourneyId || trainNumber}-${index}`,
@@ -298,6 +300,7 @@ export async function getBoard(
       modeLabel: label,
       network: info.network,
       trainNumber,
+      platform,
       baseTime,
       realTime,
       delayMinutes,

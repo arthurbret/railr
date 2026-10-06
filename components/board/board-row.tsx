@@ -62,6 +62,7 @@ export function BoardRow({
           <ModeIcon mode={entry.mode} className="size-3.5 shrink-0" />
           <span className="truncate">
             {entry.modeLabel} {entry.trainNumber}
+            {kind === "departures" && entry.platform ? ` · Quai ${entry.platform}` : ""}
             {entry.message && (delayed || cancelled) ? ` · ${entry.message}` : ""}
           </span>
         </ItemDescription>

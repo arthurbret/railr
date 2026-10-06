@@ -32,6 +32,8 @@ export interface BoardEntry {
   modeLabel: string
   network: string
   trainNumber: string
+  /** Departure platform ("quai"), when provided by SNCF/Navitia. */
+  platform?: string
   /** ISO strings, timezone-naive (Europe/Paris local time). */
   baseTime: string
   realTime: string
