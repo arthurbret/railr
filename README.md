@@ -34,7 +34,9 @@
  - [x] 📍 Sélection de gares favorites
  - [x] 🚈 Page "train" avec toutes les informations sur le train et ses différentes gares d'arrêts
  - [ ] 🔔 Notifications Web Push
- - [ ] 🚉 Gares à proximités sur le dashboard
+ - [x] 🚉 Gares à proximité sur l'accueil
+ - [x] ⌘K Recherche instantanée, historique des gares consultées
+ - [x] ⏱️ Retards à la minute, trains supprimés, actualisation automatique
  - [ ] 👮🏼‍♀️ Signalement communautaire (retard, danger)
 
 ## 🛠️ Technologies utilisées
@@ -69,7 +71,6 @@
     <td>
       <ul style="list-style-type: none; padding: 0;">
         <li><a href="https://numerique.sncf.com/startup/api/"><img src="https://img.shields.io/badge/api--sncf-purple" alt="API SNCF" /></a></li>
-        <li><a href="https://firebase.google.com/"><img src="https://img.shields.io/badge/firebase-yellow" alt="Firebase" /></a></li>
       </ul>
     </td>
     <td>Affichage d'alertes et notifications stylisées</td>
@@ -78,7 +79,7 @@
     <td>Alertes</td>
     <td>
       <ul style="list-style-type: none; padding: 0;">
-        <li><a href="https://react-hot-toast.com/"><img src="https://img.shields.io/badge/react--hot--toast-brown" alt="React Hot Toast" /></a></li>
+        <li><a href="https://sonner.emilkowal.ski/"><img src="https://img.shields.io/badge/sonner-brown" alt="Sonner" /></a></li>
       </ul>
     </td>
     <td>Affichage d'alertes et notifications stylisées</td>
@@ -111,7 +112,14 @@
 
 Pour configurer les variables d'environnement, nous utilisons un fichier `.env` non suivi, placé à la racine du projet.
 
-Un fichier `.env.example` permet de voir la forme du `.env` final, à vous de le compléter avec vos clés
+Un fichier `.env.example` permet de voir la forme du `.env` final, à vous de le compléter avec vos clés :
+
+```bash
+cp .env.example .env.local
+# SNCF_API_KEY=votre-clé (https://numerique.sncf.com/startup/api/)
+```
+
+La clé n'est utilisée que côté serveur (route handlers `app/api/*`) : elle n'est plus exposée au navigateur.
 
 **2. Utilisation de l'application**
 
