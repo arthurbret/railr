@@ -77,7 +77,26 @@ export default function HomePage() {
             className="h-4 w-auto opacity-70 dark:invert"
           />
           <span>Projet open source, non affilié à la SNCF.</span>
-          <span>Données : API SNCF (Navitia) · voies : SNCF Open Data</span>
+          <span>
+            Données : API SNCF (Navitia) · voies :{" "}
+            <a
+              href="https://transport.data.gouv.fr/datasets/horaires-sncf"
+              target="_blank"
+              rel="noreferrer"
+              className="underline underline-offset-4 hover:text-foreground"
+            >
+              SNCF Open Data
+            </a>
+            , sous licence{" "}
+            <a
+              href="https://opendatacommons.org/licenses/odbl/1.0/"
+              target="_blank"
+              rel="noreferrer"
+              className="underline underline-offset-4 hover:text-foreground"
+            >
+              ODbL
+            </a>
+          </span>
         </div>
       </footer>
     </main>
