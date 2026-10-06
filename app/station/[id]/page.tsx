@@ -12,7 +12,11 @@ async function loadStation(rawId: string) {
   try {
     return await getStation(decodeURIComponent(rawId))
   } catch (error) {
-    if (error instanceof SncfError && (error.status === 404 || error.status === 400)) notFound()
+    if (
+      error instanceof SncfError &&
+      (error.status === 404 || error.status === 400)
+    )
+      notFound()
     throw error
   }
 }
@@ -34,7 +38,9 @@ export default async function StationPage({ params }: Props) {
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-4 py-8">
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 flex-col gap-1">
-          <h1 className="text-3xl font-semibold tracking-tight text-balance">{station.name}</h1>
+          <h1 className="text-3xl font-semibold tracking-tight text-balance">
+            {station.name}
+          </h1>
           {station.city && (
             <p className="flex items-center gap-1 text-sm text-muted-foreground">
               <MapPinIcon className="size-3.5" />
@@ -43,11 +49,22 @@ export default async function StationPage({ params }: Props) {
             </p>
           )}
         </div>
-        <StationActions station={{ id: station.id, name: station.name, city: station.city }} />
+        <StationActions
+          station={{ id: station.id, name: station.name, city: station.city }}
+        />
       </div>
       <StationBoard stationId={station.id} />
       <p className="text-center text-xs text-muted-foreground">
-        Données temps réel SNCF. Les informations peuvent différer de l&apos;affichage en gare.
+        Données temps réel SNCF (voies : SNCF Open Data, licence{" "}
+        <a
+          href="https://opendatacommons.org/licenses/odbl/1.0/"
+          target="_blank"
+          rel="noreferrer"
+          className="underline underline-offset-4 hover:text-foreground"
+        >
+          ODbL
+        </a>
+        ). Les informations peuvent différer de l&apos;affichage en gare.
       </p>
     </main>
   )

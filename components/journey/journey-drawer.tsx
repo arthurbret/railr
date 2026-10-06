@@ -45,7 +45,10 @@ export function JourneyDrawer({
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <ModeIcon mode={shown.mode} className="size-3.5" />
                 {shown.modeLabel} n° {shown.trainNumber}
-                <StatusBadge status={data?.status ?? shown.status} delay={data?.delayMinutes ?? shown.delayMinutes} />
+                <StatusBadge
+                  status={data?.status ?? shown.status}
+                  delay={data?.delayMinutes ?? shown.delayMinutes}
+                />
               </div>
               <DrawerTitle className="flex flex-wrap items-center gap-x-2 text-xl">
                 {data ? (
@@ -71,13 +74,18 @@ export function JourneyDrawer({
                 <Alert variant="destructive">
                   <TriangleAlertIcon />
                   <AlertDescription>
-                    Le détail de ce trajet n&apos;est pas disponible pour le moment.
+                    Le détail de ce trajet n&apos;est pas disponible pour le
+                    moment.
                   </AlertDescription>
                 </Alert>
               ) : isLoading || !data ? (
                 <TimelineSkeleton />
               ) : (
-                <Timeline journey={data} stationId={stationId} onNavigate={onClose} />
+                <Timeline
+                  journey={data}
+                  stationId={stationId}
+                  onNavigate={onClose}
+                />
               )}
             </div>
           </>
@@ -87,10 +95,19 @@ export function JourneyDrawer({
   )
 }
 
-function StatusBadge({ status, delay }: { status: Journey["status"]; delay: number }) {
-  if (status === "cancelled") return <Badge variant="destructive">Supprimé</Badge>
+function StatusBadge({
+  status,
+  delay,
+}: {
+  status: Journey["status"]
+  delay: number
+}) {
+  if (status === "cancelled")
+    return <Badge variant="destructive">Supprimé</Badge>
   if (status === "delayed")
-    return <Badge className="bg-warning/15 text-warning">{formatDelay(delay)}</Badge>
+    return (
+      <Badge className="bg-warning/15 text-warning">{formatDelay(delay)}</Badge>
+    )
   return <Badge className="bg-success/15 text-success">À l&apos;heure</Badge>
 }
 
@@ -134,10 +151,12 @@ function Timeline({
 
         return (
           <li key={`${stop.name}-${i}`} className="relative flex gap-3">
-            <div className="flex w-14 shrink-0 flex-col items-end pt-2.5 font-mono text-sm tabular">
+            <div className="tabular flex w-14 shrink-0 flex-col items-end pt-2.5 font-mono text-sm">
               {delayed ? (
                 <>
-                  <span className="text-xs text-muted-foreground line-through">{base}</span>
+                  <span className="text-xs text-muted-foreground line-through">
+                    {base}
+                  </span>
                   <span className="font-semibold text-warning">{time}</span>
                 </>
               ) : (
@@ -174,7 +193,7 @@ function Timeline({
                   "relative mt-2 size-3 rounded-full border-2 bg-background",
                   isPassed ? "border-primary bg-primary" : "border-border",
                   (isFirst || isLast) && "size-3.5",
-                  isCurrent && "ring-4 ring-primary/20 border-primary",
+                  isCurrent && "border-primary ring-4 ring-primary/20",
                   stop.skipped && "border-destructive bg-background"
                 )}
               />
@@ -198,12 +217,21 @@ function Timeline({
                   {stop.name}
                 </span>
               )}
+              {stop.platform && !stop.skipped && (
+                <span className="text-xs text-muted-foreground">
+                  Voie {stop.platform}
+                </span>
+              )}
               {stop.skipped ? (
                 <span className="text-xs text-destructive">Arrêt supprimé</span>
               ) : delayed ? (
-                <span className="text-xs text-warning">{formatDelay(stop.delayMinutes)}</span>
+                <span className="text-xs text-warning">
+                  {formatDelay(stop.delayMinutes)}
+                </span>
               ) : isCurrent ? (
-                <span className="text-xs text-muted-foreground">Votre gare</span>
+                <span className="text-xs text-muted-foreground">
+                  Votre gare
+                </span>
               ) : null}
             </div>
           </li>

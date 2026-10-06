@@ -1,5 +1,6 @@
 import "server-only"
 
+import { getPlatforms } from "./platforms"
 import type {
   Board,
   BoardEntry,
@@ -77,6 +78,7 @@ interface RawLink {
 interface RawBoardItem {
   display_informations: RawDisplayInformations
   stop_date_time: RawStopDateTime
+  stop_point?: { platform_code?: string }
   links: RawLink[]
 }
 
@@ -143,11 +145,25 @@ function hhmm(time?: string) {
 /** Difference in minutes between two "HHMMSS" strings, wrapping midnight. */
 function timeDelta(base?: string, amended?: string) {
   if (!base || !amended) return 0
-  const toMin = (t: string) => Number(t.slice(0, 2)) * 60 + Number(t.slice(2, 4))
+  const toMin = (t: string) =>
+    Number(t.slice(0, 2)) * 60 + Number(t.slice(2, 4))
   let diff = toMin(amended) - toMin(base)
   if (diff < -720) diff += 1440
   if (diff > 720) diff -= 1440
   return diff
+}
+
+/** Today's date in Paris, "YYYY-MM-DD". */
+function parisToday() {
+  return new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Paris" }).format(
+    new Date()
+  )
+}
+
+function addDays(date: string, days: number) {
+  const d = new Date(`${date}T12:00:00Z`)
+  d.setUTCDate(d.getUTCDate() + days)
+  return d.toISOString().slice(0, 10)
 }
 
 /** Strip the trailing "(City)" Navitia appends to names. */
@@ -166,7 +182,13 @@ function detectMode(
 ): { mode: TransportMode; label: string } {
   const c = commercial.toLowerCase()
   const p = physical.toLowerCase()
-  if (c.includes("ouigo") || c.includes("tgv") || c.includes("lyria") || c.includes("eurostar") || p.includes("grande vitesse"))
+  if (
+    c.includes("ouigo") ||
+    c.includes("tgv") ||
+    c.includes("lyria") ||
+    c.includes("eurostar") ||
+    p.includes("grande vitesse")
+  )
     return { mode: "tgv", label: commercial || "TGV" }
   if (c.includes("intercit")) return { mode: "intercites", label: "Intercités" }
   if (c.includes("car") || p.includes("autocar") || p.includes("bus"))
@@ -174,8 +196,10 @@ function detectMode(
   if (c.includes("rer")) return { mode: "rer", label: "RER" }
   if (c.includes("transilien") || p.includes("transilien"))
     return { mode: "transilien", label: "Transilien" }
-  if (c.includes("tram") || p.includes("tram")) return { mode: "tram", label: "Tram-train" }
-  if (c.includes("ter") || p.includes("ter")) return { mode: "ter", label: commercial || "TER" }
+  if (c.includes("tram") || p.includes("tram"))
+    return { mode: "tram", label: "Tram-train" }
+  if (c.includes("ter") || p.includes("ter"))
+    return { mode: "ter", label: commercial || "TER" }
   return { mode: "autre", label: commercial || physical || "Train" }
 }
 
@@ -217,9 +241,16 @@ export async function searchStations(query: string): Promise<Station[]> {
     .map((p) => toStation(p.stop_area!))
 }
 
-export async function nearbyStations(lat: number, lon: number): Promise<Station[]> {
+export async function nearbyStations(
+  lat: number,
+  lon: number
+): Promise<Station[]> {
   const data = await navitia<{
-    places_nearby?: { embedded_type: string; distance: string; stop_area?: RawStopArea }[]
+    places_nearby?: {
+      embedded_type: string
+      distance: string
+      stop_area?: RawStopArea
+    }[]
   }>(
     `/coords/${lon};${lat}/places_nearby?type[]=stop_area&distance=15000&count=6&depth=1`,
     60 * 60
@@ -244,7 +275,7 @@ export async function getBoard(
   kind: BoardKind,
   count = 20
 ): Promise<Board> {
-  const [station, data] = await Promise.all([
+  const [station, data, platformAt] = await Promise.all([
     getStation(stationId),
     navitia<{
       departures?: RawBoardItem[]
@@ -254,6 +285,7 @@ export async function getBoard(
       `/stop_areas/${encodeURIComponent(stationId)}/${kind}?count=${count}&data_freshness=realtime&depth=1`,
       20
     ),
+    getPlatforms(),
   ])
 
   const disruptions = new Map((data.disruptions ?? []).map((d) => [d.id, d]))
@@ -263,10 +295,12 @@ export async function getBoard(
   const entries = items.map((item, index): BoardEntry => {
     const info = item.display_informations
     const sdt = item.stop_date_time
-    const rawReal = kind === "departures" ? sdt.departure_date_time : sdt.arrival_date_time
+    const rawReal =
+      kind === "departures" ? sdt.departure_date_time : sdt.arrival_date_time
     const rawBase =
-      (kind === "departures" ? sdt.base_departure_date_time : sdt.base_arrival_date_time) ??
-      rawReal
+      (kind === "departures"
+        ? sdt.base_departure_date_time
+        : sdt.base_arrival_date_time) ?? rawReal
     const baseTime = toIso(rawBase)
     const realTime = toIso(rawReal)
     const delayMinutes = Math.max(0, minutesBetween(baseTime, realTime))
@@ -274,7 +308,8 @@ export async function getBoard(
     const disruptionId = item.links.find((l) => l.type === "disruption")?.id
     const disruption = disruptionId ? disruptions.get(disruptionId) : undefined
     const stop = impactedStopAt(disruption, stationUic)
-    const stopStatus = kind === "departures" ? stop?.departure_status : stop?.arrival_status
+    const stopStatus =
+      kind === "departures" ? stop?.departure_status : stop?.arrival_status
     const cancelled =
       disruption?.severity?.effect === "NO_SERVICE" ||
       stop?.stop_time_effect === "deleted" ||
@@ -287,8 +322,15 @@ export async function getBoard(
         : "on-time"
 
     const { mode, label } = detectMode(info.commercial_mode, info.physical_mode)
-    const vehicleJourneyId = item.links.find((l) => l.type === "vehicle_journey")?.id ?? ""
+    const vehicleJourneyId =
+      item.links.find((l) => l.type === "vehicle_journey")?.id ?? ""
     const trainNumber = info.trip_short_name || info.headsign
+    const siri = platformAt(trainNumber, stationId, baseTime.slice(0, 10))
+    const platform =
+      (kind === "departures" ? siri?.departure : siri?.arrival) ??
+      siri?.departure ??
+      siri?.arrival ??
+      (item.stop_point?.platform_code?.trim() || undefined)
 
     return {
       key: `${vehicleJourneyId || trainNumber}-${index}`,
@@ -298,6 +340,7 @@ export async function getBoard(
       modeLabel: label,
       network: info.network,
       trainNumber,
+      platform,
       baseTime,
       realTime,
       delayMinutes,
@@ -322,22 +365,36 @@ export async function getJourney(id: string): Promise<Journey> {
 
   let data: Payload
   try {
-    data = await navitia<Payload>(`/vehicle_journeys/${encodeURIComponent(id)}?depth=3`, 30)
+    data = await navitia<Payload>(
+      `/vehicle_journeys/${encodeURIComponent(id)}?depth=3`,
+      30
+    )
   } catch (error) {
     // Real-time journey ids expire quickly; fall back to the theoretical one.
     const baseId = id.replace(/:RealTime:.*$/, "")
     if (!(error instanceof SncfError) || baseId === id) throw error
-    data = await navitia<Payload>(`/vehicle_journeys/${encodeURIComponent(baseId)}?depth=3`, 30)
+    data = await navitia<Payload>(
+      `/vehicle_journeys/${encodeURIComponent(baseId)}?depth=3`,
+      30
+    )
   }
 
   const vj = data.vehicle_journeys?.[0]
   if (!vj) throw new SncfError("Trajet introuvable", 404)
 
+  const platformAt = await getPlatforms()
+  const trainNumber = vj.headsign || vj.name
+  // Journey ids embed the service date: "vehicle_journey:SNCF:2026-10-06:6919:...".
+  const serviceDate = vj.id.match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? parisToday()
+  const firstTime =
+    vj.stop_times[0]?.departure_time ?? vj.stop_times[0]?.arrival_time ?? ""
+
   const disruptions = data.disruptions ?? []
   const impacted = new Map<string, RawImpactedStop>()
   for (const d of disruptions) {
     for (const o of d.impacted_objects ?? []) {
-      for (const s of o.impacted_stops ?? []) impacted.set(uic(s.stop_point.id), s)
+      for (const s of o.impacted_stops ?? [])
+        impacted.set(uic(s.stop_point.id), s)
     }
   }
 
@@ -347,14 +404,24 @@ export async function getJourney(id: string): Promise<Journey> {
     const baseDep = hit?.base_departure_time ?? st.departure_time
     const realArr = hit?.amended_arrival_time ?? st.arrival_time
     const realDep = hit?.amended_departure_time ?? st.departure_time
+    // Overnight trains: stops earlier than the first departure are on the next day.
+    const stopTime = baseDep ?? baseArr ?? ""
+    const date =
+      stopTime && stopTime < firstTime ? addDays(serviceDate, 1) : serviceDate
+    const siri = platformAt(trainNumber, st.stop_point.id, date)
     return {
       stopAreaId: st.stop_point.stop_area?.id,
+      platform: siri?.departure ?? siri?.arrival,
       name: cleanName(st.stop_point.name),
       baseArrival: hhmm(baseArr),
       baseDeparture: hhmm(baseDep),
       realArrival: hhmm(realArr),
       realDeparture: hhmm(realDep),
-      delayMinutes: Math.max(timeDelta(baseArr, realArr), timeDelta(baseDep, realDep), 0),
+      delayMinutes: Math.max(
+        timeDelta(baseArr, realArr),
+        timeDelta(baseDep, realDep),
+        0
+      ),
       skipped: hit?.stop_time_effect === "deleted",
     }
   })
@@ -364,7 +431,9 @@ export async function getJourney(id: string): Promise<Journey> {
   for (const [code, s] of impacted) {
     if (known.has(code) || s.stop_time_effect !== "deleted") continue
     const at = hhmm(s.base_arrival_time ?? s.base_departure_time) ?? ""
-    const idx = stops.findIndex((x) => (x.baseArrival ?? x.baseDeparture ?? "") > at)
+    const idx = stops.findIndex(
+      (x) => (x.baseArrival ?? x.baseDeparture ?? "") > at
+    )
     stops.splice(idx === -1 ? stops.length : idx, 0, {
       name: cleanName(s.stop_point.name),
       baseArrival: hhmm(s.base_arrival_time),
@@ -386,7 +455,7 @@ export async function getJourney(id: string): Promise<Journey> {
 
   return {
     id: vj.id,
-    trainNumber: vj.headsign || vj.name,
+    trainNumber,
     mode,
     modeLabel: label,
     network: line?.network?.name ?? "SNCF",
@@ -397,7 +466,9 @@ export async function getJourney(id: string): Promise<Journey> {
     delayMinutes,
     messages: [
       ...new Set(
-        disruptions.flatMap((d) => d.messages?.map((m) => m.text) ?? []).filter(Boolean)
+        disruptions
+          .flatMap((d) => d.messages?.map((m) => m.text) ?? [])
+          .filter(Boolean)
       ),
     ],
   }
